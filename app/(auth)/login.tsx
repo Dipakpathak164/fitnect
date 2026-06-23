@@ -73,7 +73,7 @@ export default function LoginScreen() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -85,6 +85,8 @@ export default function LoginScreen() {
 
       if (error) {
         showToast('Sign Up Error', error.message, 'error');
+      } else if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
+        showToast('Sign Up Error', 'This email is already registered. Please sign in instead.', 'error');
       } else {
         setOtpCode('');
         setAuthMode('verify_signup_otp');

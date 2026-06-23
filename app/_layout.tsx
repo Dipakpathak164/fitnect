@@ -5,7 +5,7 @@ import { Session } from '@supabase/supabase-js';
 import { supabase } from '../utils/supabase';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
-import { ToastProvider } from '../components/Toast';
+import { ToastProvider, useToast } from '../components/Toast';
 
 const CustomDarkTheme = {
   ...DarkTheme,
@@ -15,11 +15,12 @@ const CustomDarkTheme = {
   },
 };
 
-export default function RootLayout() {
+function InnerLayout() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const segments = useSegments();
   const router = useRouter();
+  const { isResettingPassword } = useToast();
 
   useEffect(() => {
     const handleDeepLink = async (url: string | null) => {
@@ -81,11 +82,11 @@ export default function RootLayout() {
     if (!session && !inAuthGroup) {
       // Redirect to login if not authenticated and trying to access tabs
       router.replace('/(auth)/login');
-    } else if (session && inAuthGroup) {
-      // Redirect to dashboard if authenticated and trying to access login
+    } else if (session && inAuthGroup && !isResettingPassword) {
+      // Redirect to dashboard if authenticated, trying to access login, and not resetting password
       router.replace('/(tabs)');
     }
-  }, [session, segments, loading]);
+  }, [session, segments, loading, isResettingPassword]);
 
   if (loading) {
     return (
@@ -96,12 +97,18 @@ export default function RootLayout() {
   }
 
   return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
     <ThemeProvider value={CustomDarkTheme}>
       <ToastProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
+        <InnerLayout />
       </ToastProvider>
     </ThemeProvider>
   );

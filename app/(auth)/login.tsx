@@ -23,7 +23,7 @@ import { useToast } from '../../components/Toast';
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
-  const { showToast } = useToast();
+  const { showToast, setIsResettingPassword } = useToast();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -176,6 +176,11 @@ export default function LoginScreen() {
     setLoading(true);
 
     try {
+      // Set the flag to true BEFORE verifying the OTP.
+      // This prevents the root layout's session redirect listener from auto-redirecting
+      // the user to the dashboard as soon as they log in with the recovery token.
+      setIsResettingPassword(true);
+
       const { error } = await supabase.auth.verifyOtp({
         email,
         token: otpCode,
@@ -183,11 +188,13 @@ export default function LoginScreen() {
       });
 
       if (error) {
+        setIsResettingPassword(false);
         showToast('Verification Error', error.message, 'error');
       } else {
         setAuthMode('new_password');
       }
     } catch (err: any) {
+      setIsResettingPassword(false);
       showToast('Error', err.message || 'Something went wrong', 'error');
     } finally {
       setLoading(false);
@@ -211,6 +218,9 @@ export default function LoginScreen() {
       if (error) {
         showToast('Error', error.message, 'error');
       } else {
+        // Clear the password reset flag first.
+        // This will trigger the root layout listener to redirect the user to the dashboard.
+        setIsResettingPassword(false);
         showToast(
           'Password Reset Complete!',
           'Your password has been updated. You are now logged in!',

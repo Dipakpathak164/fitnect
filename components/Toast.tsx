@@ -8,6 +8,8 @@ export type ToastType = 'success' | 'error' | 'info';
 interface ToastContextType {
   showToast: (title: string, message: string, type?: ToastType, duration?: number) => void;
   hideToast: () => void;
+  isResettingPassword: boolean;
+  setIsResettingPassword: (val: boolean) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -25,6 +27,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [type, setType] = useState<ToastType>('info');
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
 
   const translateY = useRef(new Animated.Value(-150)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -122,7 +125,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <ToastContext.Provider value={{ showToast, hideToast }}>
+    <ToastContext.Provider value={{ showToast, hideToast, isResettingPassword, setIsResettingPassword }}>
       {children}
       {visible && (
         <Animated.View

@@ -1,0 +1,73 @@
+{
+  "expo": {
+    "name": "Fitnect",
+    "slug": "fitnect",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/fitnect-icon-theme.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#111315",
+    "primaryColor": "#111315",
+    "androidStatusBar": {
+      "backgroundColor": "#111315",
+      "barStyle": "light-content",
+      "translucent": false
+    },
+    "splash": {
+      "image": "./assets/fitnect-splash-clean.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#111315",
+      "dark": {
+        "image": "./assets/fitnect-splash-clean.png",
+        "backgroundColor": "#111315"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "backgroundColor": "#111315",
+      "splash": {
+        "image": "./assets/fitnect-splash-clean.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#111315",
+        "dark": {
+          "image": "./assets/fitnect-splash-clean.png",
+          "backgroundColor": "#111315"
+        }
+      }
+    },
+    "android": {
+      "package": "com.dipak.fitnect",
+      "backgroundColor": "#111315",
+      "splash": {
+        "image": "./assets/fitnect-splash-clean.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#111315",
+        "dark": {
+          "image": "./assets/fitnect-splash-clean.png",
+          "backgroundColor": "#111315"
+        }
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/fitnect-adaptive-icon.png",
+        "backgroundColor": "#111315"
+      }
+    },
+    "scheme": "fitnect",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/fitnect-splash-clean.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#111315",
+          "dark": {
+            "image": "./assets/fitnect-splash-clean.png",
+            "backgroundColor": "#111315"
+          }
+        }
+      ]
+    ]
+  }
+}

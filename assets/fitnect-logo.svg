@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="crimsonGloss" x1="150" y1="132" x2="410" y2="336" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF3347"/>
+      <stop offset="0.45" stop-color="#D20A1E"/>
+      <stop offset="1" stop-color="#A60013"/>
+    </linearGradient>
+    <linearGradient id="charcoalGloss" x1="122" y1="218" x2="230" y2="374" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34373A"/>
+      <stop offset="1" stop-color="#111315"/>
+    </linearGradient>
+  </defs>
+  <path d="M150 372L185 220H276C288 220 294 234 287 244L276 260H197L176 344C172 359 165 365 150 372Z" fill="url(#charcoalGloss)"/>
+  <path d="M174 132H410L374 186H247C228 186 218 196 212 216L198 260H152L176 166C181 146 193 132 174 132Z" fill="url(#crimsonGloss)"/>
+  <path d="M183 246H285L314 176L348 336L380 250H430" stroke="url(#crimsonGloss)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="430" cy="250" r="28" fill="url(#crimsonGloss)"/>
+  <circle cx="430" cy="250" r="13" fill="white"/>
+  <path d="M430 278L414 326" stroke="#17191B" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="414" cy="326" r="22" fill="#17191B"/>
+  <circle cx="414" cy="326" r="10" fill="white"/>
+  <path d="M193 143H379L359 173H239C224 173 212 183 207 198L195 234" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+</svg>

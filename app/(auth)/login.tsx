@@ -143,7 +143,10 @@ export default function LoginScreen() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const redirectUrl = Linking.createURL('/(auth)/login');
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl,
+      });
 
       if (error) {
         showToast('Error', error.message, 'error');

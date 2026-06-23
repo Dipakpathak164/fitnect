@@ -34,7 +34,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<'email' | 'username' | 'password' | 'newPassword' | 'otp' | null>(null);
   const insets = useSafeAreaInsets();
-  
+
   // Ref for the hidden OTP text input
   const otpInputRef = useRef<TextInput>(null);
 
@@ -237,9 +237,13 @@ export default function LoginScreen() {
   };
 
   const handleOAuthRedirect = async (url: string) => {
-    const hash = url.split('#')[1];
-    if (hash) {
-      const params = Object.fromEntries(new URLSearchParams(hash));
+    let paramsString = url.split('#')[1];
+    if (!paramsString) {
+      paramsString = url.split('?')[1];
+    }
+
+    if (paramsString) {
+      const params = Object.fromEntries(new URLSearchParams(paramsString));
       const { access_token, refresh_token } = params;
       if (access_token && refresh_token) {
         const { error } = await supabase.auth.setSession({
@@ -247,6 +251,7 @@ export default function LoginScreen() {
           refresh_token,
         });
         if (error) throw error;
+        showToast('Success', 'Logged in successfully!', 'success');
       }
     }
   };
@@ -316,10 +321,10 @@ export default function LoginScreen() {
       const char = otpCode[i] || '';
       const isFocused = otpCode.length === i && focusedField === 'otp';
       boxes.push(
-        <View 
-          key={i} 
+        <View
+          key={i}
           style={[
-            styles.otpBox, 
+            styles.otpBox,
             char ? styles.otpBoxFilled : null,
             isFocused ? styles.otpBoxActive : null
           ]}
@@ -330,14 +335,14 @@ export default function LoginScreen() {
     }
     return (
       <View style={styles.otpOuterContainer}>
-        <TouchableOpacity 
-          style={styles.otpBoxesContainer} 
-          activeOpacity={1} 
+        <TouchableOpacity
+          style={styles.otpBoxesContainer}
+          activeOpacity={1}
           onPress={() => otpInputRef.current?.focus()}
         >
           {boxes}
         </TouchableOpacity>
-        
+
         {/* Hidden TextInput overlay */}
         <TextInput
           ref={otpInputRef}
@@ -364,16 +369,16 @@ export default function LoginScreen() {
         style={styles.bgImage}
         resizeMode="cover"
       />
-      
+
       {/* Gradient overlay to fade background to pitch black at bottom */}
       <LinearGradient
         colors={['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.55)', '#000000']}
         style={StyleSheet.absoluteFillObject}
       />
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.scrollContainer, { paddingTop: insets.top + 40, paddingBottom: insets.bottom + 40 }]} 
+        contentContainerStyle={[styles.scrollContainer, { paddingTop: insets.top + 40, paddingBottom: insets.bottom + 40 }]}
         keyboardShouldPersistTaps="handled"
       >
         {/* Logo and Welcome Headers */}
@@ -382,19 +387,19 @@ export default function LoginScreen() {
             <FitnectLogo size={120} />
           </View>
           <Text style={styles.welcomeText}>
-            {authMode === 'signup' ? 'Get Started' : 
-             authMode === 'signin' ? 'Welcome Back' : 
-             authMode === 'verify_signup_otp' ? 'Verify Email' : 'Reset Password'}
+            {authMode === 'signup' ? 'Get Started' :
+              authMode === 'signin' ? 'Welcome Back' :
+                authMode === 'verify_signup_otp' ? 'Verify Email' : 'Reset Password'}
           </Text>
           <Text style={styles.backText}>
-            {authMode === 'signup' ? 'With FITNECT' : 
-             authMode === 'signin' ? 'To FITNECT' : 
-             authMode === 'verify_signup_otp' ? 'For FITNECT' : 'For FITNECT'}
+            {authMode === 'signup' ? 'With FITNECT' :
+              authMode === 'signin' ? 'To FITNECT' :
+                authMode === 'verify_signup_otp' ? 'For FITNECT' : 'For FITNECT'}
           </Text>
           <Text style={styles.subtext}>
-            {authMode === 'signup' ? 'Create an account to track your health' : 
-             authMode === 'signin' ? 'Sign In to continue your journey' : 
-             authMode === 'verify_signup_otp' ? 'Enter the verification code sent to your email' : 'Recover your account access'}
+            {authMode === 'signup' ? 'Create an account to track your health' :
+              authMode === 'signin' ? 'Sign In to continue your journey' :
+                authMode === 'verify_signup_otp' ? 'Enter the verification code sent to your email' : 'Recover your account access'}
           </Text>
         </View>
 
@@ -403,13 +408,13 @@ export default function LoginScreen() {
           {/* Tab Switcher */}
           {(authMode === 'signin' || authMode === 'signup') && (
             <View style={styles.tabContainer}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.tab, authMode === 'signin' && styles.activeTab]}
                 onPress={() => setAuthMode('signin')}
               >
                 <Text style={[styles.tabText, authMode === 'signin' && styles.activeTabText]}>Sign In</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.tab, authMode === 'signup' && styles.activeTab]}
                 onPress={() => setAuthMode('signup')}
               >
@@ -449,7 +454,7 @@ export default function LoginScreen() {
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                 />
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.eyeBtn}
                   onPress={() => setSecurePasswordEntry(!securePasswordEntry)}
                 >
@@ -461,7 +466,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.forgotBtn}
                 onPress={() => setAuthMode('forgot_password')}
               >
@@ -514,7 +519,7 @@ export default function LoginScreen() {
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                 />
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.eyeBtn}
                   onPress={() => setSecurePasswordEntry(!securePasswordEntry)}
                 >
@@ -533,7 +538,7 @@ export default function LoginScreen() {
               <Text style={styles.descriptionText}>
                 Enter your email address to receive a 6-digit password reset code.
               </Text>
-              
+
               <View style={[styles.inputWrapper, focusedField === 'email' && styles.focusedInputWrapper]}>
                 <Mail color={focusedField === 'email' ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'} size={20} style={styles.inputIcon} />
                 <TextInput
@@ -549,7 +554,7 @@ export default function LoginScreen() {
                 />
               </View>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.backBtn}
                 onPress={() => setAuthMode('signin')}
               >
@@ -566,7 +571,7 @@ export default function LoginScreen() {
 
               {renderOtpBoxes()}
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.backBtn}
                 onPress={() => setAuthMode('forgot_password')}
               >
@@ -583,7 +588,7 @@ export default function LoginScreen() {
 
               {renderOtpBoxes()}
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.backBtn}
                 onPress={() => setAuthMode('signup')}
               >
@@ -611,7 +616,7 @@ export default function LoginScreen() {
                   onFocus={() => setFocusedField('newPassword')}
                   onBlur={() => setFocusedField(null)}
                 />
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.eyeBtn}
                   onPress={() => setSecurePasswordEntry(!securePasswordEntry)}
                 >
@@ -626,16 +631,16 @@ export default function LoginScreen() {
           )}
 
           {/* Overlapping Diamond Arrow Button */}
-          <TouchableOpacity 
-            style={styles.submitBtn} 
+          <TouchableOpacity
+            style={styles.submitBtn}
             onPress={
               authMode === 'signin' ? handleSignIn :
-              authMode === 'signup' ? handleSignUp :
-              authMode === 'forgot_password' ? handleRequestReset :
-              authMode === 'verify_reset_otp' ? handleVerifyResetOtp :
-              authMode === 'verify_signup_otp' ? handleVerifySignupOtp :
-              handleUpdatePassword
-            } 
+                authMode === 'signup' ? handleSignUp :
+                  authMode === 'forgot_password' ? handleRequestReset :
+                    authMode === 'verify_reset_otp' ? handleVerifyResetOtp :
+                      authMode === 'verify_signup_otp' ? handleVerifySignupOtp :
+                        handleUpdatePassword
+            }
             disabled={loading}
           >
             <View style={styles.submitIconContainer}>

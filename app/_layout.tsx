@@ -25,9 +25,12 @@ function InnerLayout() {
   useEffect(() => {
     const handleDeepLink = async (url: string | null) => {
       if (!url) return;
-      const hash = url.split('#')[1];
-      if (hash) {
-        const params = Object.fromEntries(new URLSearchParams(hash));
+      let paramsString = url.split('#')[1];
+      if (!paramsString) {
+        paramsString = url.split('?')[1];
+      }
+      if (paramsString) {
+        const params = Object.fromEntries(new URLSearchParams(paramsString));
         const { access_token, refresh_token } = params;
         if (access_token && refresh_token) {
           const { error } = await supabase.auth.setSession({

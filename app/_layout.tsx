@@ -24,30 +24,34 @@ function InnerLayout() {
 
   useEffect(() => {
     const handleDeepLink = async (url: string | null) => {
-      if (!url) return;
-      let paramsString = url.split('#')[1];
-      if (!paramsString) {
-        paramsString = url.split('?')[1];
-      }
-      if (paramsString) {
-        const params = Object.fromEntries(new URLSearchParams(paramsString));
-        const { access_token, refresh_token } = params;
-        if (access_token && refresh_token) {
-          const { error } = await supabase.auth.setSession({
-            access_token,
-            refresh_token,
-          });
-          if (error) {
-            console.error('Error setting session from deep link:', error.message);
+      try {
+        if (!url) return;
+        let paramsString = url.split('#')[1];
+        if (!paramsString) {
+          paramsString = url.split('?')[1];
+        }
+        if (paramsString) {
+          const params = Object.fromEntries(new URLSearchParams(paramsString));
+          const { access_token, refresh_token } = params;
+          if (access_token && refresh_token) {
+            const { error } = await supabase.auth.setSession({
+              access_token,
+              refresh_token,
+            });
+            if (error) {
+              console.error('Error setting session from deep link:', error.message);
+            }
           }
         }
+      } catch (err) {
+        console.error('Deep link handling error:', err);
       }
     };
 
     // Get initial URL if app was opened via a link
     Linking.getInitialURL().then((url) => {
       if (url) handleDeepLink(url);
-    });
+    }).catch((err) => console.error('getInitialURL error:', err));
 
     // Listen for incoming URLs while app is running
     const subscription = Linking.addEventListener('url', (event) => {
@@ -63,6 +67,9 @@ function InnerLayout() {
     // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setLoading(false);
+    }).catch((err) => {
+      console.error('getSession error:', err);
       setLoading(false);
     });
 
